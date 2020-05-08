@@ -141,9 +141,24 @@ if(NOT rosidl_generate_interfaces_SKIP_INSTALL)
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
   )
-  rosidl_export_typesupport_targets(
+  # For single typesupport builds, exporting the target and dependencies is needed
+  get_used_typesupports(_typesupports "rosidl_typesupport_c")
+  set(_single_typesupport FALSE)
+  if(NOT _typesupports MATCHES ";")
+    ament_export_dependencies(
+      "fastrtps"
+      "rmw"
+      "rosidl_runtime_c"
+      "rosidl_typesupport_fastrtps_cpp"
+      "rosidl_typesupport_interface"
+    )
+    ament_export_targets(
+      ${rosidl_generate_interfaces_TARGET}${_target_suffix})
+    set(_single_typesupport TRUE)
+  endif()
+  rosidl_export_typesupport_targets(${_target_suffix}
+    ${_single_typesupport}
     ${rosidl_generate_interfaces_TARGET}${_target_suffix})
-  ament_export_targets(${rosidl_generate_interfaces_TARGET}${_target_suffix})
 endif()
 
 if(BUILD_TESTING AND rosidl_generate_interfaces_ADD_LINTER_TESTS)
