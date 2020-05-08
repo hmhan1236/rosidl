@@ -24,12 +24,20 @@ list(APPEND ${PROJECT_NAME}_CONFIG_EXTRAS "${_generated_extra_file}")
 
 # install export files for targets
 if(NOT _ROSIDL_CMAKE_EXPORT_TYPESUPPORT_TARGETS STREQUAL "")
-  foreach(_target ${_ROSIDL_CMAKE_EXPORT_TYPESUPPORT_TARGETS})
-    install(
-      EXPORT "${_target}"
-      DESTINATION share/${PROJECT_NAME}/cmake
-      NAMESPACE "${PROJECT_NAME}::"
-      FILE "${_target}Export.cmake"
-    )
+  foreach(_tuple ${_ROSIDL_CMAKE_EXPORT_TYPESUPPORT_TARGETS})
+    string(REPLACE ":" ";" _tuple "${_tuple}")
+    list(GET _tuple 1 _target)
+    list(GET _tuple 2 _single_typesupport)
+    # For single typesupport builds, the target is already exported with
+    # ament_export_targets
+    message(WARNING "$single typesupport: ${_single_typesupport}")
+    if(NOT "${_single_typesupport}" STREQUAL "TRUE")
+      install(
+        EXPORT "${_target}"
+        DESTINATION share/${PROJECT_NAME}/cmake
+        NAMESPACE "${PROJECT_NAME}::"
+        FILE "${_target}Export.cmake"
+      )
+    endif()
   endforeach()
 endif()

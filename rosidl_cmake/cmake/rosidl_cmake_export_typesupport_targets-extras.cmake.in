@@ -8,9 +8,17 @@ set(_exported_typesupport_targets
 if(NOT _exported_typesupport_targets STREQUAL "")
   set(_exported_targets_reversed ${_exported_typesupport_targets})
   list(REVERSE _exported_targets_reversed)
-  foreach(_target ${_exported_targets_reversed})
+  foreach(_tuple ${_exported_targets_reversed})
+    string(REPLACE ":" ";" _tuple "${_tuple}")
+    list(GET _tuple 0 _suffix)
+    list(GET _tuple 1 _target)
+    list(GET _tuple 2 _single_typesupport)
+
     set(_export_file "${@PROJECT_NAME@_DIR}/${_target}Export.cmake")
-    include("${_export_file}")
+    if(NOT ${_single_typesupport} STREQUAL "TRUE")
+      # Already include by ament_export_targets-extras.cmake otherwise
+      include("${_export_file}")
+    endif()
 
     # extract the target names associated with the export
     set(_regex "foreach\\(_expectedTarget (.+)\\)")
@@ -26,7 +34,6 @@ if(NOT _exported_typesupport_targets STREQUAL "")
     string(REPLACE " " ";" _targets "${_targets}")
     list(LENGTH _targets _length)
 
-    message("suffix: ${_suffix}")
     list(APPEND @PROJECT_NAME@_TARGETS${_suffix} ${_targets})
   endforeach()
 endif()

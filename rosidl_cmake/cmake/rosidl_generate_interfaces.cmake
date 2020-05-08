@@ -142,7 +142,7 @@ macro(rosidl_generate_interfaces target)
     string(REGEX REPLACE ".*:([^:]*)$" "\\1" _tuple_file "${_tuple}")
     get_filename_component(_parent_dir "${_tuple_file}" DIRECTORY)
     if("${_parent_dir}" STREQUAL "action")
-      find_package(action_msgs QUIET)
+      find_package(action_msgs)
       if(NOT ${action_msgs_FOUND})
         message(FATAL_ERROR
           "Unable to generate action interface for '${_tuple_file}'. "
