@@ -21,3 +21,15 @@ configure_file(
   @ONLY
 )
 list(APPEND ${PROJECT_NAME}_CONFIG_EXTRAS "${_generated_extra_file}")
+
+# install export files for targets
+if(NOT _ROSIDL_CMAKE_EXPORT_TYPESUPPORT_TARGETS STREQUAL "")
+  foreach(_target ${_ROSIDL_CMAKE_EXPORT_TYPESUPPORT_TARGETS})
+    install(
+      EXPORT "${_target}"
+      DESTINATION share/${PROJECT_NAME}/cmake
+      NAMESPACE "${PROJECT_NAME}::"
+      FILE "${_target}Export.cmake"
+    )
+  endforeach()
+endif()
