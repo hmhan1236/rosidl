@@ -30,7 +30,6 @@ if(NOT _ROSIDL_CMAKE_EXPORT_TYPESUPPORT_TARGETS STREQUAL "")
     list(GET _tuple 2 _single_typesupport)
     # For single typesupport builds, the target is already exported with
     # ament_export_targets
-    message(WARNING "$single typesupport: ${_single_typesupport}")
     if(NOT "${_single_typesupport}" STREQUAL "TRUE")
       install(
         EXPORT "${_target}"
